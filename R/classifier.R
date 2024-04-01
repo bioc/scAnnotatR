@@ -1052,7 +1052,7 @@ classify_cells_sce <-
   union.marker_genes <- unique(unname(unlist(lapply(classifiers,
                                                 function(x) marker_genes(x)))))
   # if expression matrix is not dgCMatrix: DelayedMatrix for ex.
-  mat = SummarizedExperiment::assay(classify_obj, sce_assay, withDimnames = FALSE)
+  mat = SummarizedExperiment::assay(classify_obj, sce_assay, withDimnames = TRUE)
   if (!is(mat, 'dgCMatrix'))
     mat <- as(mat, "dgCMatrix")
 
@@ -1063,6 +1063,8 @@ classify_cells_sce <-
   # split dataset into multiple chunks to reduce running time
   nchunks = ceiling(ncol(classify_obj)/chunk_size)
   for (i in seq(1, nchunks)) {
+    message("i = ", i, "...")
+    
     idx.chunk = seq((i - 1) * chunk_size + 1,
                     min(ncol(classify_obj), i * chunk_size))
     obj.chunk <- classify_obj[, idx.chunk]
